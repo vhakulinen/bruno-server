@@ -1,6 +1,6 @@
 import pytest
 
-from include import env
+from bruno import env
 
 
 @pytest.fixture()

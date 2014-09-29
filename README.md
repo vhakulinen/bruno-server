@@ -1,10 +1,10 @@
 Bruno Server
 ============
 
-This project is WIP. Just before release on GitHub, I successfully made
+This project is WIP and school project. Just before release on GitHub, I successfully made
 transeferred live audio from peer to peer over network (not lan). In lack of
 working hardware on another end, we weren't able to make a real call. So feel
-free to test this, client can be found here(TODO: add link).
+free to test this, client can be found [here](https://github.com/vhakulinen/bruno-client).
 
 Running the server
 ==================
@@ -28,5 +28,14 @@ There is stuff to do with SSL connection which is fairly easy on server
 side but this work on client side before we can apply it. Protocol
 between peers (UDP connections) needs to be designed but server <-> client protocol
 is pretty much locked down.
+
+Some todos:
+  * SSL
+  * Text messaging
+  * Groups chats
+  * Friends
+  * Password hashing
+  * Video calls
+  * File transfer
 
 If you are really bored, you could write tests :)

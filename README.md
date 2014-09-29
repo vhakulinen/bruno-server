@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/vhakulinen/bruno-server.svg)](https://travis-ci.org/vhakulinen/bruno-server)
 Bruno Server
 ============
 

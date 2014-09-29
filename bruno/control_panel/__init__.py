@@ -1,10 +1,10 @@
-from include.db import get_user
-from include.db.models import User
-from include.db.constants import db_session as session
-from include.db.auth import logout as dblogout
-from include.control_panel.decorators import Args
-from include.env import inputs, socket_by_user
-from include import commands as user_api
+from bruno.db import get_user
+from bruno.db.models import User
+from bruno.db.constants import db_session as session
+from bruno.db.auth import logout as dblogout
+from bruno.control_panel.decorators import Args
+from bruno.env import inputs, socket_by_user
+from bruno import commands as user_api
 
 panel_commands = {}
 

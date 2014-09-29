@@ -4,7 +4,7 @@
 import json
 import logging
 
-from include.env import dbuff_limit, error_codes, command_codes, event_codes
+from bruno.env import dbuff_limit, error_codes, command_codes, event_codes
 
 
 def send(socket, data):

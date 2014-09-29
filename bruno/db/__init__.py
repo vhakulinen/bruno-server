@@ -1,6 +1,6 @@
 # from sqlalchemy.ext.declarative import declarative_base
-from include.db.constants import engine, Base, db_session as session
-from include.db.models import User
+from bruno.db.constants import engine, Base, db_session as session
+from bruno.db.models import User
 
 
 def get_user(username):
@@ -28,5 +28,5 @@ def create_user(username, password):
 
 
 def init_db():
-    import include.db.models
+    import bruno.db.models
     Base.metadata.create_all(engine)

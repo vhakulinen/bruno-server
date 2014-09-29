@@ -1,4 +1,4 @@
-from include.commands.decorators import Args as cmd_args
+from bruno.commands.decorators import Args as cmd_args
 
 
 class Args(cmd_args):

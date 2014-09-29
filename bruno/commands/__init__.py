@@ -12,13 +12,13 @@ import logging
 import random
 import string
 
-from include.send_utils import (send_srv_message, send_error, send_cmd_success,
+from bruno.send_utils import (send_srv_message, send_error, send_cmd_success,
                                 send_message, send_event)
-from include.db import auth
-from include.db.models import User
-from include import db
-from include.commands.decorators import Args, auth_required, udp_required
-from include.env import inputs, Call, udp_inits, socket_by_username
+from bruno.db import auth
+from bruno.db.models import User
+from bruno import db
+from bruno.commands.decorators import Args, auth_required, udp_required
+from bruno.env import inputs, Call, udp_inits, socket_by_username
 
 commands = {}
 

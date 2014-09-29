@@ -2,8 +2,8 @@
 import string
 import random
 
-# from include.send_utils import send_error
-from include import db
+# from bruno.send_utils import send_error
+from bruno import db
 
 
 max_clients = 15
@@ -74,7 +74,7 @@ def socket_by_username(username, socket=None):
     def err(socket, code):
         if socket:
             # FIXME: this is just stupid to import stuff here...
-            from include.send_utils import send_error
+            from bruno.send_utils import send_error
             send_error(socket, code)
     user = db.get_user(username)
     if user:
@@ -105,7 +105,7 @@ class Call:
         inputs[self.caller].call = self
         inputs[self.target].call = self
         # FIXME: Another stupid import
-        from include.send_utils import send_event
+        from bruno.send_utils import send_event
         send_event(self.target, 102, (inputs[self.caller].profile.username))
         # self.caller.call = self
         # self.target.call = self
@@ -113,7 +113,7 @@ class Call:
     def answer(self):
         if inputs[self.caller].udp_addr and inputs[self.target].udp_addr:
             # FIXME: This is just stupid import
-            from include.send_utils import send_event
+            from bruno.send_utils import send_event
             self._state = self.ANSWERED
             key = ''.join(random.choice(string.ascii_lowercase)
                           for x in range(10))

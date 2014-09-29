@@ -1,5 +1,5 @@
-from include.send_utils import send_error
-from include.env import inputs
+from bruno.send_utils import send_error
+from bruno.env import inputs
 
 
 class Args:

@@ -5,10 +5,10 @@ import signal
 import select
 import socket
 
-from include.env import inputs, udp_inits
-from include import env
-from include.control_panel import stdin_processor
-import include.server_utils as utils
+from bruno.env import inputs, udp_inits
+from bruno import env
+from bruno.control_panel import stdin_processor
+import bruno.server_utils as utils
 
 
 # Global running flag

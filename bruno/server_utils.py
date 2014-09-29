@@ -1,5 +1,5 @@
 """
-This module contains utilitys for Bruno server which could be included
+This module contains utilitys for Bruno server which could be brunod
 to brunod.py but I decided to have these in their own module for readabilty.
 
 Mainly has utilitys for receiving and processing data from client.
@@ -9,10 +9,10 @@ Just import this to burnod.py.
 import logging
 import json
 
-from include.env import inputs
-from include.send_utils import send_error
-from include.commands import commands, send_msg
-from include.db import auth
+from bruno.env import inputs
+from bruno.send_utils import send_error
+from bruno.commands import commands, send_msg
+from bruno.db import auth
 
 
 def read_delimited_buffer(socket):

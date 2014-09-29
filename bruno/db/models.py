@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 
-# from include.db import Base, db_session as session
-from include.db.constants import Base, db_session as session
+# from bruno.db import Base, db_session as session
+from bruno.db.constants import Base, db_session as session
 
 
 # For friendships

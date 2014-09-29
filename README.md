@@ -24,9 +24,9 @@ Cotributing
 Open issue if you come across any bug or if you know python and have free time,
 clone the repo, fix the bug and make pull request!
 
-There is stuff to do with SSL connection which is fairly easy to do on server
-side but this needs work on client side before we can apply it. Protocol
-between peers (UDP connections) needs to be designed but server client protocl
+There is stuff to do with SSL connection which is fairly easy on server
+side but this work on client side before we can apply it. Protocol
+between peers (UDP connections) needs to be designed but server <-> client protocol
 is pretty much locked down.
 
 If you are really bored, you could write tests :)

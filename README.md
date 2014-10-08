@@ -19,7 +19,7 @@ python brunod.py
 For all the options use the `--help` switch. Default TCP port is `9090`
 and UDP `31500`. Default ip is `localhost`.
 
-Cotributing
+Contributing
 ===========
 
 Open issue if you come across any bug or if you know python and have free time,

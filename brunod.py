@@ -85,7 +85,8 @@ def runserver(tcp_ip, tcp_port, udp_ip, udp_port):
                 else:
                     if utils.read_content_buffer(s):
                         utils.data_processor(s)
-                        inputs[s].reset_buffers()
+                        if s in inputs:
+                            inputs[s].reset_buffers()
         for s in expectional:
             logging.info('Client in exceptional state!')
             utils.close_client(s)

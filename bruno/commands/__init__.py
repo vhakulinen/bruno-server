@@ -13,7 +13,7 @@ import random
 import string
 
 from bruno.send_utils import (send_srv_message, send_error, send_cmd_success,
-                                send_message, send_event)
+                              send_message, send_event)
 from bruno.db import auth
 from bruno.db.models import User
 from bruno import db
@@ -31,6 +31,7 @@ def send_msg(socket, args):
         sock = socket_by_username(args.get('user'), socket)
         if sock:
             send_message(sock, inputs[socket].profile.username, content)
+            send_cmd_success(socket, 130)
     else:
         # TODO: Group message
         pass
@@ -41,6 +42,7 @@ def send_msg(socket, args):
 @auth_required
 def echo(socket, args):
     logging.debug('Echoing args')
+    send_cmd_success(socket, 99, "Echoed")
     send_srv_message(socket, args)
 commands.update({'echo': {'func': echo, 'args': str}})
 
@@ -50,6 +52,7 @@ def udp_init(socket, args):
     key = ''.join(random.choice(string.ascii_lowercase) for x in range(10))
     # Rest of this happens in brunod.py
     udp_inits.update({key: socket})
+    send_cmd_success(socket, 120)
     send_event(socket, 101, (key))
 commands.update({'udp_init': {'func': udp_init, 'args': list}})
 
@@ -64,6 +67,7 @@ def call(socket, args):
         if not inputs[target].call:
             if inputs[target].udp_addr:
                 Call(caller=socket, target=target)
+                send_cmd_success(socket, 110)
             else:
                 # Target is not ready for udp
                 send_error(socket, 401)
@@ -81,6 +85,7 @@ def answer(socket, args):
     if inputs[socket].call and not inputs[socket].call.answered:
         # The magic happens in following function
         inputs[socket].call.answer()
+        send_cmd_success(socket, 111)
     else:
         # TODO: There is no call pending
         pass
@@ -91,6 +96,7 @@ commands.update({'answer': {'func': answer, 'args': list}})
 def hangup(socket, args):
     if inputs[socket].call:
         inputs[socket].call.hangup()
+        send_cmd_success(socket, 112)
     else:
         # TODO: No call to hangup
         pass

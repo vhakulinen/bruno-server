@@ -40,6 +40,14 @@ command_codes = {99: '%s',  # Custom message
                  100: 'You are now logged in as %s',
                  101: 'Logged out',
                  102: 'Registeration success',
+                 # Calling
+                 110: 'Call initialized',
+                 111: 'Call answered',
+                 112: 'Call ended',
+                 # UPD init
+                 120: 'UDP initializion started',
+                 # Messaging
+                 130: 'Message sended',
                  }
 
 

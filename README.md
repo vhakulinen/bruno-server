@@ -45,11 +45,9 @@ between peers (UDP connections) needs to be designed but server <-> client proto
 is pretty much locked down.
 
 Some todos:
-  * SSL
   * Text messaging
   * Groups chats
   * Friends
-  * Password hashing
   * Video calls
   * File transfer
 

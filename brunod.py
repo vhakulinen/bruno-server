@@ -4,6 +4,7 @@ import logging
 import signal
 import select
 import socket
+import ssl
 
 from bruno.env import inputs, udp_inits
 from bruno import env
@@ -55,11 +56,17 @@ def runserver(tcp_ip, tcp_port, udp_ip, udp_port):
         for s in readable:
             if s == server_sock:
                 # incoming connection
-                conn, addr = server_sock.accept()
-                conn.setblocking(0)  # comment this out for ssl
-                logging.info('Receiced connection from %s:%s' %
-                             conn.getpeername())
-                inputs.update({conn: env.ClientDataContainer()})
+                rawconn, addr = server_sock.accept()
+                try:
+                    conn = ssl.wrap_socket(rawconn, server_side=True,
+                                           certfile="server.crt",
+                                           keyfile="server.key")
+                    # conn.setblocking(0)  # comment this out for ssl
+                    logging.info('Receiced connection from %s:%s' %
+                                 conn.getpeername())
+                    inputs.update({conn: env.ClientDataContainer()})
+                except:
+                    logging.info("Failed to do ssl handshake")
             elif s == udp_server_socket:
                 # incoming udp data
                 data, addr = udp_server_socket.recvfrom(10)

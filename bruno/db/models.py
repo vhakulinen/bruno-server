@@ -1,3 +1,6 @@
+import uuid
+import hashlib
+
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
@@ -42,6 +45,11 @@ class User(Base):
                             secondaryjoin=id == request_table.c.target_id,
                             backref="from")
 
+    def __init__(self, username, password, *args, **kwargs):
+        salt = uuid.uuid4().bytes
+        password = salt+hashlib.sha256(password.encode('utf8') + salt).digest()
+        super().__init__(username=username, password=password, *args, **kwargs)
+
     @hybrid_property
     def username(self):
         return self._username
@@ -51,6 +59,14 @@ class User(Base):
         if len(value) < 3:
             raise ValueError('Min lenght is 3')
         self._username = value
+
+    def valid_password(self, password):
+        salt = self.password[:16]
+        if self.password[16:] ==\
+           hashlib.sha256(password.encode('utf8')+salt).digest():
+            return True
+        else:
+            False
 
     def save(self):
         session.add(self)

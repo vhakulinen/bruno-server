@@ -20,6 +20,8 @@ error_codes = {99: '%s',  # Custom message
                101: 'Unknown command',
                102: 'Invalid argument(s)\n%s',
                103: 'UDP not avaiable',
+               104: 'UDP already initalized',
+               105: 'UDP initializion already in progress',
                # Auth errors
                200: 'Invalid login',
                201: 'Username already in use',
@@ -48,6 +50,8 @@ command_codes = {99: '%s',  # Custom message
                  120: 'UDP initializion started',
                  # Messaging
                  130: 'Message sended',
+                 # Online users
+                 131: '%s',
                  }
 
 

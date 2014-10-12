@@ -49,12 +49,27 @@ commands.update({'echo': {'func': echo, 'args': str}})
 
 @auth_required
 def udp_init(socket, args):
-    key = ''.join(random.choice(string.ascii_lowercase) for x in range(10))
-    # Rest of this happens in brunod.py
-    udp_inits.update({key: socket})
-    send_cmd_success(socket, 120)
-    send_event(socket, 101, (key))
+    if inputs[socket].udp_addr:
+        send_error(socket, 104)
+    elif socket in list(udp_inits.values()):
+        send_error(socket, 105)
+    else:
+        key = ''.join(random.choice(string.ascii_lowercase) for x in range(10))
+        # Rest of this happens in brunod.py
+        udp_inits.update({key: socket})
+        send_cmd_success(socket, 120)
+        send_event(socket, 101, (key))
 commands.update({'udp_init': {'func': udp_init, 'args': list}})
+
+
+@auth_required
+def online_users(socket, args):
+    output = ''
+    for i in inputs:
+        if inputs[i].profile:
+            output += '%s %s;' % (inputs[i].profile.username, str(True))
+    send_cmd_success(socket, 131, output)
+commands.update({'users': {'func': online_users, 'args': list}})
 
 
 # {{{ Calling commands
@@ -111,7 +126,7 @@ def login(socket, args):
     user = db.get_user(args[1])
     if user == 1:
         send_error(socket, 204)
-    elif user and user.password == args[2]:
+    elif user and user.valid_password(args[2]):
         auth.login(socket, user)
         send_cmd_success(socket, 100, user.username)
     else:

@@ -10,8 +10,22 @@ free to test this, client can be found [here](https://github.com/vhakulinen/brun
 Running the server
 ==================
 
-Clone this repo and
+Create SSL stuff with the following commands
+```
+openssl genrsa -des3 -out server.orig.key 2048
+openssl rsa -in server.orig.key -out server.key
+openssl req -new -key server.key -out server.csr
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+```
+Remember to copy the server.crt file to client's directory.
 
+Create the database in python
+```python
+from bruno.db import init_db
+init_db()
+```
+
+Run the server
 ```
 python brunod.py
 ```

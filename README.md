@@ -47,7 +47,6 @@ is pretty much locked down.
 Some todos:
   * Text messaging
   * Groups chats
-  * Friends
   * Video calls
   * File transfer
 

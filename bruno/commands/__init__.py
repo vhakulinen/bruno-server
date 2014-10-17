@@ -18,7 +18,7 @@ from bruno.db import auth
 from bruno.db.models import User
 from bruno import db
 from bruno.commands.decorators import Args, auth_required, udp_required
-from bruno.env import inputs, Call, udp_inits, socket_by_username
+from bruno.env import inputs, Call, udp_inits, socket_by_username, call_between
 
 commands = {}
 
@@ -78,43 +78,53 @@ commands.update({'users': {'func': online_users, 'args': list}})
 @Args(2, 'Syntax: <username>')
 def call(socket, args):
     target = socket_by_username(args[1], socket)
-    if target and not inputs[socket].call:
-        if not inputs[target].call:
+    if target:
+        if not call_between(socket, target):
             if inputs[target].udp_addr:
                 Call(caller=socket, target=target)
                 send_cmd_success(socket, 110)
             else:
-                # Target is not ready for udp
-                send_error(socket, 401)
+                # Target not ready for UDP
+                pass
         else:
-            # TODO: target is already having a call
+            # Dublicate call
             pass
-    else:
-        # TODO: You already are having a call
-        pass
 commands.update({'call': {'func': call, 'args': list}})
 
 
 @auth_required
+@Args(2, 'Syntax: <username>')
 def answer(socket, args):
-    if inputs[socket].call and not inputs[socket].call.answered:
-        # The magic happens in following function
-        inputs[socket].call.answer()
-        send_cmd_success(socket, 111)
-    else:
-        # TODO: There is no call pending
-        pass
+    def pending(socket, target):
+        call = call_between(socket, target)
+        if call and not call.answered:
+            return call
+        return False
+    target = socket_by_username(args[1], socket)
+    if target:
+        # call = inputs[socket].call_pending(target)
+        call = pending(socket, target)
+        if call:
+            send_cmd_success(socket, 111)
+            call.answer()
+        else:
+            # TODO: No call to answer
+            pass
 commands.update({'answer': {'func': answer, 'args': list}})
 
 
 @auth_required
+@Args(2, 'Syntax: <username>')
 def hangup(socket, args):
-    if inputs[socket].call:
-        inputs[socket].call.hangup()
-        send_cmd_success(socket, 112)
-    else:
-        # TODO: No call to hangup
-        pass
+    target = socket_by_username(args[1], socket)
+    if target:
+        call = call_between(socket, target)
+        if call:
+            call.hangup()
+            send_cmd_success(socket, 112)
+        else:
+            # TODO: No call to hangup for the target
+            pass
 commands.update({'hangup': {'func': hangup, 'args': list}})
 # }}}
 

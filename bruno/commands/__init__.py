@@ -18,13 +18,8 @@ from bruno.db import auth
 from bruno.db.models import User
 from bruno import db
 from bruno.commands.decorators import Args, auth_required, udp_required
-<<<<<<< HEAD
-from bruno.env import (inputs, Call, udp_inits, socket_by_username,
-                       socket_by_user)
-=======
 from bruno.env import (inputs, Call, udp_inits, socket_by_username,
                        call_between, socket_by_user)
->>>>>>> WIP: needs more testing and error messages
 
 commands = {}
 

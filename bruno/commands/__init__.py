@@ -18,7 +18,8 @@ from bruno.db import auth
 from bruno.db.models import User
 from bruno import db
 from bruno.commands.decorators import Args, auth_required, udp_required
-from bruno.env import inputs, Call, udp_inits, socket_by_username
+from bruno.env import (inputs, Call, udp_inits, socket_by_username,
+                       socket_by_user)
 
 commands = {}
 
@@ -70,6 +71,51 @@ def online_users(socket, args):
             output += '%s %s;' % (inputs[i].profile.username, str(True))
     send_cmd_success(socket, 131, output)
 commands.update({'users': {'func': online_users, 'args': list}})
+
+
+@auth_required
+@Args(2, 'Syntax: <username>')
+def friend_request_send(socket, args):
+    target = db.get_user(args[1])
+    if target:
+        if target not in inputs[socket].profile.friends:
+            if target not in inputs[socket].profile.requests and\
+                    inputs[socket].profile not in target.requests:
+                target.requests.append(inputs[socket].profile)
+                send_cmd_success(socket, 140)
+                # Lets notify the user that it has new friend request
+                if target.online:
+                    sock = socket_by_user(target)
+                    if sock:
+                        send_event(sock, 110, inputs[socket].profile.username)
+            else:
+                send_error(socket, 222)
+        else:
+            send_error(socket, 221)
+    else:
+        send_error(socket, 220)
+commands.update({'friend_request_send': {'func': friend_request_send,
+                                         'args': list}})
+
+
+@auth_required
+@Args(2, 'Syntax: <username>')
+def friend_request_accept(socket, args):
+    target = db.get_user(args[1])
+    if target:
+        if target in inputs[socket].profile.requests:
+            # Remove request
+            inputs[socket].profile.requests.remove(target)
+            # Add users to eachothers friends lists
+            inputs[socket].profile.friends.append(target)
+            target.friends.append(inputs[socket].profile)
+            send_cmd_success(socket, 141)
+        else:
+            send_error(socket, 223)
+    else:
+        send_error(socket, 220)
+commands.update({'friend_request_accept': {'func': friend_request_accept,
+                                           'args': list}})
 
 
 # {{{ Calling commands

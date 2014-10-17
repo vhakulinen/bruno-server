@@ -65,6 +65,32 @@ def user_stats(args):
 panel_commands.update({'user': {'func': user_stats, 'args': list}})
 
 
+@Args(2, "requests <username>")
+def user_requests(args):
+    user = get_user(args[1])
+    if user:
+        print("Friend requests for user '%s'" % user.username)
+        for u in user.requests:
+            print(u.username)
+        print("%s total" % len(user.requests))
+    else:
+        print("User not found!")
+panel_commands.update({'requests': {'func': user_requests, 'args': list}})
+
+
+@Args(2, "friends <username>")
+def user_friends(args):
+    user = get_user(args[1])
+    if user:
+        print("Friend list of user '%s'" % user.username)
+        for u in user.friends:
+            print(u.username)
+        print("%s total" % len(user.friends))
+    else:
+        print("User not found!")
+panel_commands.update({'friends': {'func': user_friends, 'args': list}})
+
+
 @Args(2, "udp <username>")
 def user_udp(args):
     for i in inputs:

@@ -28,6 +28,11 @@ error_codes = {99: '%s',  # Custom message
                202: 'Email already in use',
                203: 'Authentication required (You\'ll need to login)',
                204: 'User is logged in somewhere else',
+               # Friend requests
+               220: 'User doesn\'t exist',
+               221: 'User already in friends',
+               222: 'Friend request exists already',
+               223: 'No such request to accept',
                # Message errors
                300: 'User or group -name invalid',
                301: 'User not online',
@@ -52,19 +57,25 @@ command_codes = {99: '%s',  # Custom message
                  130: 'Message sended',
                  # Online users
                  131: '%s',
+                 # Friend requests
+                 140: 'Friend request sended',
+                 141: 'Friend request accepted',
                  }
 
 
 # These messages contains actual informtaion
 event_codes = {'': '',
-               # Messaging (p2p)
+               # UDP hole puch
                # IP:PORT KEY
                100: '%s:%s %s',
                # KEY
                101: '%s',
                # Incoming call event
                # USERNAME
-               102: '%s'
+               102: '%s',
+               # New friend request
+               # USERNAME
+               110: '%s'
                }
 
 

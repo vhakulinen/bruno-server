@@ -37,8 +37,10 @@ error_codes = {99: '%s',  # Custom message
                300: 'User or group -name invalid',
                301: 'User not online',
                # Call errors
-               400: 'No call pending',
+               400: 'No call to answer',
                401: 'Failed to make a call',
+               402: 'Dubplicated call',
+               403: 'No call to end',
                }
 
 # These are sended when command executed succesfully
@@ -49,8 +51,8 @@ command_codes = {99: '%s',  # Custom message
                  102: 'Registeration success',
                  # Calling
                  110: 'Call initialized',
-                 111: 'Call answered',
-                 112: 'Call ended',
+                 111: 'Answering the call',
+                 112: 'Hangingup the call',
                  # UPD init
                  120: 'UDP initializion started',
                  # Messaging
@@ -73,6 +75,9 @@ event_codes = {'': '',
                # Incoming call event
                # USERNAME
                102: '%s',
+               # Call hangedup
+               # USERNAME
+               103: '%s',
                # New friend request
                # USERNAME
                110: '%s'
@@ -113,7 +118,21 @@ def socket_by_username(username, socket=None):
         err(socket, 300)
 
 
-class Call:
+def call_between(socket, target):
+    """
+        call_between(socket, target) -> Call/None
+
+        Checks inputs[socket].calls for existing call where partakers are
+        socket and target. If finds one, returns the call object, else returns
+        None.
+    """
+    for call in inputs[socket].calls:
+        if set([socket, target]) == set(call.partakers):
+            return call
+    return None
+
+
+class Call:  # {{{
     ANSWERED = 1
     PENDING = 2
     caller = None
@@ -125,13 +144,11 @@ class Call:
         self.caller = caller
         self.target = target
 
-        inputs[self.caller].call = self
-        inputs[self.target].call = self
+        inputs[self.caller].calls.append(self)
+        inputs[self.target].calls.append(self)
         # FIXME: Another stupid import
         from bruno.send_utils import send_event
         send_event(self.target, 102, (inputs[self.caller].profile.username))
-        # self.caller.call = self
-        # self.target.call = self
 
     def answer(self):
         if inputs[self.caller].udp_addr and inputs[self.target].udp_addr:
@@ -151,10 +168,15 @@ class Call:
             pass
 
     def hangup(self):
-        inputs[self.caller].call = None
-        inputs[self.target].call = None
-        # self.caller.call = None
-        # self.target.call = None
+        from bruno.send_utils import send_event
+        inputs[self.caller].calls.remove(self)
+        inputs[self.target].calls.remove(self)
+        send_event(self.caller, 103, inputs[self.target].profile.username)
+        send_event(self.target, 103, inputs[self.caller].profile.username)
+
+    @property
+    def partakers(self):
+        return [self.caller, self.target]
 
     @property
     def state(self):
@@ -166,6 +188,7 @@ class Call:
             return True
         else:
             return False
+# }}}
 
 
 class ClientDataContainer(object):  # {{{
@@ -179,12 +202,21 @@ class ClientDataContainer(object):  # {{{
     # Content buffer
     _cbuff = ''
 
-    call = None
+    calls = []
     udp_addr = None
 
     def reset_buffers(self):
         self._dbuff = ''
         self._cbuff = ''
+
+    def call_pending(self, user):
+        # Check if there is call peding with user
+        for call in self.calls:
+            # If call.caller == user, then the user is calling us
+            # notthe other way araound
+            if call.PENDING and call.caller == user:
+                return call
+        return None
 
     @property
     def authenticated(self):

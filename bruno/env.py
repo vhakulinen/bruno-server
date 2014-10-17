@@ -37,8 +37,10 @@ error_codes = {99: '%s',  # Custom message
                300: 'User or group -name invalid',
                301: 'User not online',
                # Call errors
-               400: 'No call pending',
+               400: 'No call to answer',
                401: 'Failed to make a call',
+               402: 'Dubplicated call',
+               403: 'No call to end',
                }
 
 # These are sended when command executed succesfully
@@ -73,6 +75,9 @@ event_codes = {'': '',
                # Incoming call event
                # USERNAME
                102: '%s',
+               # Call hangedup
+               # USERNAME
+               103: '%s',
                # New friend request
                # USERNAME
                110: '%s'
@@ -122,7 +127,7 @@ def call_between(socket, target):
         None.
     """
     for call in inputs[socket].calls:
-        if set(socket, target) == set(call.partakers):
+        if set([socket, target]) == set(call.partakers):
             return call
     return None
 
@@ -163,8 +168,11 @@ class Call:  # {{{
             pass
 
     def hangup(self):
+        from bruno.send_utils import send_event
         inputs[self.caller].calls.remove(self)
-        inputs[self.target].calls.remote(self)
+        inputs[self.target].calls.remove(self)
+        send_event(self.caller, 103, inputs[self.target].profile.username)
+        send_event(self.target, 103, inputs[self.caller].profile.username)
 
     @property
     def partakers(self):

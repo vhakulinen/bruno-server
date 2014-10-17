@@ -130,11 +130,9 @@ def call(socket, args):
                 Call(caller=socket, target=target)
                 send_cmd_success(socket, 110)
             else:
-                # Target not ready for UDP
-                pass
+                send_error(socket, 401)
         else:
-            # Dublicate call
-            pass
+            send_error(socket, 402)
 commands.update({'call': {'func': call, 'args': list}})
 
 
@@ -154,8 +152,7 @@ def answer(socket, args):
             send_cmd_success(socket, 111)
             call.answer()
         else:
-            # TODO: No call to answer
-            pass
+            send_error(socket, 400)
 commands.update({'answer': {'func': answer, 'args': list}})
 
 
@@ -169,8 +166,7 @@ def hangup(socket, args):
             call.hangup()
             send_cmd_success(socket, 112)
         else:
-            # TODO: No call to hangup for the target
-            pass
+            send_error(socket, 403)
 commands.update({'hangup': {'func': hangup, 'args': list}})
 # }}}
 

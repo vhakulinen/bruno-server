@@ -19,10 +19,9 @@ openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 ```
 Remember to copy the server.crt file to client's directory.
 
-Create the database in python
-```python
-from bruno.db import init_db
-init_db()
+Create the database
+```
+python brunod.py --init-db
 ```
 
 Run the server

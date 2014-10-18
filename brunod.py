@@ -130,8 +130,15 @@ if __name__ == '__main__':  # {{{
                       default='INFO')
     parser.add_option('-m', '--max-clients', dest='max_clients',
                       help='Maximum number of clients', default=15)
+    parser.add_option('--init-db', action="store_true", dest="init",
+                      help="Initialize database")
 
     (options, args) = parser.parse_args()
+
+    if options.init:
+        from bruno import db
+        db.init_db()
+        sys.exit(0)
 
     logging.basicConfig(filename=options.log_file, level=options.debug_level)
     env.max_clients = options.max_clients

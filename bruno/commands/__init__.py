@@ -178,7 +178,7 @@ commands.update({'hangup': {'func': hangup, 'args': list}})
 def login(socket, args):
     logging.debug('Processing login')
     user = db.get_user(args[1])
-    if user == 1:
+    if user.online == 1:
         send_error(socket, 204)
     elif user and user.valid_password(args[2]):
         auth.login(socket, user)

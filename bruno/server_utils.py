@@ -151,6 +151,7 @@ def close_client(socket):
 
         Closes client's socket and removes entry from env.inputs
     """
+    # TODO: Notify online friends for /logout/ (like in commands.logout)
     logging.info('Closing client')
     if inputs[socket].profile:
         auth.logout(socket)

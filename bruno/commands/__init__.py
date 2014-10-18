@@ -73,6 +73,7 @@ def online_users(socket, args):
 commands.update({'users': {'func': online_users, 'args': list}})
 
 
+# {{{ Friend requests
 @auth_required
 @Args(2, 'Syntax: <username>')
 def friend_request_send(socket, args):
@@ -116,6 +117,7 @@ def friend_request_accept(socket, args):
         send_error(socket, 220)
 commands.update({'friend_request_accept': {'func': friend_request_accept,
                                            'args': list}})
+# }}}
 
 
 # {{{ Calling commands
@@ -181,6 +183,10 @@ def login(socket, args):
     elif user and user.valid_password(args[2]):
         auth.login(socket, user)
         send_cmd_success(socket, 100, user.username)
+        send_event(socket, 99, (''.join([' %s:%s' % (f.username, f.online)
+                                         for f in user.friends])[1:],
+                                         # [1:] so we dont send extra space
+                                ''.join([r.username for r in user.requests])))
     else:
         send_error(socket, 200)
 commands.update({'login': {'func': login, 'args': list}})

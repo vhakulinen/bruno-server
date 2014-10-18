@@ -67,6 +67,11 @@ command_codes = {99: '%s',  # Custom message
 
 # These messages contains actual informtaion
 event_codes = {'': '',
+               # Login
+               # <list of friends>;<list of friendrequests>
+               # list of friends: <username>:<online>
+               # list of requests: <username>
+               99: '%s;%s',
                # UDP hole puch
                # IP:PORT KEY
                100: '%s:%s %s',

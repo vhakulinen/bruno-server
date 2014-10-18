@@ -184,8 +184,8 @@ def login(socket, args):
         auth.login(socket, user)
         send_cmd_success(socket, 100, user.username)
         send_event(socket, 99, (''.join([' %s:%s' % (f.username, f.online)
-                                         for f in user.friends])[1:],
                                          # [1:] so we dont send extra space
+                                         for f in user.friends])[1:],
                                 ''.join([r.username for r in user.requests])))
     else:
         send_error(socket, 200)

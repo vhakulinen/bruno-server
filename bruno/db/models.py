@@ -38,12 +38,10 @@ class User(Base):
 
     friends = relationship("User", secondary=association_table,
                            primaryjoin=id == association_table.c.user_id,
-                           secondaryjoin=id == association_table.c.friend_id,
-                           backref="added_by")
+                           secondaryjoin=id == association_table.c.friend_id)
     requests = relationship("User", secondary=request_table,
                             primaryjoin=id == request_table.c.user_id,
-                            secondaryjoin=id == request_table.c.target_id,
-                            backref="from")
+                            secondaryjoin=id == request_table.c.target_id)
 
     def __init__(self, username, password, *args, **kwargs):
         salt = uuid.uuid4().bytes

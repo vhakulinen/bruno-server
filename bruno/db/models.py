@@ -2,8 +2,7 @@ import uuid
 import hashlib
 
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table
-from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 
 # from bruno.db import Base, db_session as session
 from bruno.db.constants import Base, db_session as session
@@ -31,7 +30,7 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
-    _username = Column(String(30), nullable=False, unique=True)
+    username = Column(String(30), nullable=False, unique=True)
     password = Column(String(60), nullable=False)
     online = Column(Boolean, default=False)
     # peer2peer = Column(Boolean, default=True)
@@ -43,20 +42,19 @@ class User(Base):
                             primaryjoin=id == request_table.c.user_id,
                             secondaryjoin=id == request_table.c.target_id)
 
-    def __init__(self, username, password, *args, **kwargs):
-        salt = uuid.uuid4().bytes
-        password = salt+hashlib.sha256(password.encode('utf8') + salt).digest()
-        super().__init__(username=username, password=password, *args, **kwargs)
-
-    @hybrid_property
-    def username(self):
-        return self._username
-
-    @username.setter
-    def username(self, value):
+    @validates('username')
+    def validate_username(self, key, value):
         if len(value) < 3:
-            raise ValueError('Min lenght is 3')
-        self._username = value
+            raise ValueError({'field': key})
+        return value
+
+    @validates('password')
+    def validate_password(self, key, value):
+        if len(value) < 3:
+            raise ValueError({'field': key})
+        salt = uuid.uuid4().bytes
+        value = salt+hashlib.sha256(value.encode('utf8') + salt).digest()
+        return value
 
     def valid_password(self, password):
         salt = self.password[:16]

@@ -224,8 +224,17 @@ commands.update({'logout': {'func': logout, 'args': list}})
 def register(socket, args):
     logging.debug('Processing registeration')
     if not db.get_user(args[1]):
-        User(username=args[1], password=args[2]).save()
-        send_cmd_success(socket, 102)
+        try:
+            User(username=args[1], password=args[2]).save()
+        except ValueError as e:
+            if e.args[0]['field'] == 'username':
+                send_error(socket, 205)
+            elif e.args[0]['field'] == 'password':
+                send_error(socket, 206)
+            else:
+                raise Exception("Unhandeled error while creating User!")
+        else:
+            send_cmd_success(socket, 102)
     else:
         send_error(socket, 201)
 commands.update({'register': {'func': register, 'args': list}})

@@ -111,6 +111,11 @@ def friend_request_accept(socket, args):
             inputs[socket].profile.friends.append(target)
             target.friends.append(inputs[socket].profile)
             send_cmd_success(socket, 141)
+            if target.online:
+                s = socket_by_user(target)
+                if s:
+                    send_event(s, 111, inputs[socket].profile.username)
+                    send_event(socket, 111, target.username)
         else:
             send_error(socket, 223)
     else:

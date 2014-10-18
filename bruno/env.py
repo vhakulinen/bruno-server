@@ -85,7 +85,13 @@ event_codes = {'': '',
                103: '%s',
                # New friend request
                # USERNAME
-               110: '%s'
+               110: '%s',
+               # Friend login
+               # USERNAME
+               111: '%s',
+               # Friend logout
+               # USERNAME
+               112: '%s',
                }
 
 

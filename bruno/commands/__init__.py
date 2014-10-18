@@ -187,6 +187,13 @@ def login(socket, args):
                                          # [1:] so we dont send extra space
                                          for f in user.friends])[1:],
                                 ''.join([r.username for r in user.requests])))
+        # Notify user's friends of its login
+        for friend in user.friends:
+            if friend.online:
+                s = socket_by_user(friend)
+                if not s:
+                    continue
+                send_event(s, 111, user.username)
     else:
         send_error(socket, 200)
 commands.update({'login': {'func': login, 'args': list}})
@@ -195,8 +202,16 @@ commands.update({'login': {'func': login, 'args': list}})
 @auth_required
 def logout(socket, args):
     logging.debug('Precessing logout')
-    auth.logout(socket)
+    user = inputs[socket].profile
+    auth.logout(socket, user=user)
     send_cmd_success(socket, 101)
+    # Notify user's friends of its logout
+    for friend in user.friends:
+        if friend.online:
+            s = socket_by_user(friend)
+            if not s:
+                continue
+            send_event(s, 112, user.username)
 commands.update({'logout': {'func': logout, 'args': list}})
 
 

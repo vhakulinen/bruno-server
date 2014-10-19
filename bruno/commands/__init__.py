@@ -122,6 +122,22 @@ def friend_request_accept(socket, args):
         send_error(socket, 220)
 commands.update({'friend_request_accept': {'func': friend_request_accept,
                                            'args': list}})
+
+
+@auth_required
+@Args(2, 'Syntax: <username>')
+def friend_request_reject(socket, args):
+    target = db.get_user(args[1])
+    if target:
+        if target in inputs[socket].profile.requests:
+            inputs[socket].profile.requests.remove(target)
+            send_cmd_success(socket, 142)
+        else:
+            send_error(socket, 223)
+    else:
+        send_error(socket, 220)
+commands.update({'friend_request_reject': {'func': friend_request_reject,
+                                           'args': list}})
 # }}}
 
 

@@ -34,7 +34,7 @@ error_codes = {99: '%s',  # Custom message
                220: 'User doesn\'t exist',
                221: 'User already in friends',
                222: 'Friend request exists already',
-               223: 'No such request to accept',
+               223: 'No such request',
                # Message errors
                300: 'User or group -name invalid',
                301: 'User not online',
@@ -64,6 +64,7 @@ command_codes = {99: '%s',  # Custom message
                  # Friend requests
                  140: 'Friend request sended',
                  141: 'Friend request accepted',
+                 142: 'Friend request rejected',
                  }
 
 

@@ -146,6 +146,26 @@ def call_between(socket, target):
     return None
 
 
+def notify_friends(user, code, content=""):
+    """
+        notify_friends(user) -> None
+
+        user = db.models.User
+        code = int (event code)
+        content = str (if there is content to event message, add it here)
+
+        Sends event as notify to all user.friends. Requires that friend is
+        online and in inputs in order to evet to be sended
+    """
+    from bruno.send_utils import send_event
+    for friend in user.friends:
+        if friend.online:
+            s = socket_by_user(friend)
+            if not s:
+                continue
+            send_event(s, code, content)
+
+
 class Call:  # {{{
     ANSWERED = 1
     PENDING = 2

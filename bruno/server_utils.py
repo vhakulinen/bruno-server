@@ -9,7 +9,7 @@ Just import this to burnod.py.
 import logging
 import json
 
-from bruno.env import inputs
+from bruno.env import inputs, notify_friends
 from bruno.send_utils import send_error
 from bruno.commands import commands, send_msg
 from bruno.db import auth
@@ -153,7 +153,14 @@ def close_client(socket):
     """
     # TODO: Notify online friends for /logout/ (like in commands.logout)
     logging.info('Closing client')
+    # if inputs[].profile is not None, the client has disconnected without
+    # logout
     if inputs[socket].profile:
+        # User has not used logout command, so lets notify
+        # its friends for logout
+        notify_friends(inputs[socket].profile, 112,
+                       inputs[socket].profile.username)
+        # And log it out from db
         auth.logout(socket)
     socket.close()
     del inputs[socket]

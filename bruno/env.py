@@ -30,6 +30,7 @@ error_codes = {99: '%s',  # Custom message
                204: 'User is logged in somewhere else',
                205: 'Username must be atleast 3 characters long',
                206: 'Password must be atleast 3 characters long',
+               207: 'Failed to create account',
                # Friend requests
                220: 'User doesn\'t exist',
                221: 'User already in friends',

@@ -237,7 +237,7 @@ def register(socket, args):
             elif e.args[0]['field'] == 'password':
                 send_error(socket, 206)
             else:
-                raise Exception("Unhandeled error while creating User!")
+                send_error(socket, 207)
         else:
             send_cmd_success(socket, 102)
     else:

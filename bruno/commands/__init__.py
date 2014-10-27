@@ -138,6 +138,18 @@ def friend_request_reject(socket, args):
         send_error(socket, 220)
 commands.update({'friend_request_reject': {'func': friend_request_reject,
                                            'args': list}})
+
+
+@auth_required
+def friend_request_list(socket, args):
+    if len(inputs[socket].profile.requests) > 0:
+        output = ''.join([' %s' % r.username
+                          for r in inputs[socket].profile.requests])[1:]
+        send_cmd_success(socket, 145, output)
+    else:
+        send_error(socket, 224)
+commands.update({'friend_request_list': {'func': friend_request_list,
+                                         'args': list}})
 # }}}
 
 
